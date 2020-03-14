@@ -4,7 +4,7 @@
 
 首先来看Handler的构造函数
 
-```
+```java
 public Handler(Callback callback, boolean async) {
     if (FIND_POTENTIAL_LEAKS) {
         final Class<? extends Handler> klass = getClass();
@@ -31,11 +31,13 @@ public Handler(Callback callback, boolean async) {
 
 ##### A: 在构建Handler之前需要有一个loooper实例，否则会报如下的错误
 
-			`"Can't create handler inside thread " + Thread.currentThread()
-	                + " that has not called Looper.prepare()"`
+```java
+		`"Can't create handler inside thread " + Thread.currentThread()
+                + " that has not called Looper.prepare()"`
+```
 当在主线程中new Handler的时候其实已经有Looper实例了，这是因为在应用启动的时候系统帮我们创建了looper，
 
-```
+```java
 public static void main(String[] args) {
         Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "ActivityThreadMain");
 
@@ -85,6 +87,18 @@ public static void main(String[] args) {
         Looper.loop();
 
         throw new RuntimeException("Main thread loop unexpectedly exited");
+    }
+```
+
+```java
+ public static void prepareMainLooper() {
+        prepare(false);
+        synchronized (Looper.class) {
+            if (sMainLooper != null) {
+                throw new IllegalStateException("The main Looper has already been prepared.");
+            }
+            sMainLooper = myLooper();
+        }
     }
 ```
 
