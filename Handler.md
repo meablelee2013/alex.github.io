@@ -32,7 +32,7 @@ public Handler(Callback callback, boolean async) {
 ##### A: 在构建Handler之前需要有一个loooper实例，否则会报如下的错误
 
 ```java
-		`"Can't create handler inside thread " + Thread.currentThread()
+`"Can't create handler inside thread " + Thread.currentThread()
                 + " that has not called Looper.prepare()"`
 ```
 当在主线程中new Handler的时候其实已经有Looper实例了，这是因为在应用启动的时候系统帮我们创建了looper，
